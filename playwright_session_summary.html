@@ -1,0 +1,328 @@
+<h1 id="playwright-testing---complete-learning-summary">Playwright Testing - Complete Learning Summary</h1>
+<p><strong>Date:</strong> Today’s Session<br />
+<strong>Project:</strong> WebTestAutomation</p>
+<hr />
+<h2 id="table-of-contents">Table of Contents</h2>
+<ol type="1">
+<li><a href="#what-we-learned-today">What We Learned Today</a></li>
+<li><a href="#playwright-setup">Playwright Setup</a></li>
+<li><a href="#test-structure">Test Structure</a></li>
+<li><a href="#key-concepts">Key Concepts</a></li>
+<li><a href="#finding-elements">Finding Elements</a></li>
+<li><a href="#writing-tests">Writing Tests</a></li>
+<li><a href="#running-tests">Running Tests</a></li>
+<li><a href="#git-commands">Git Commands</a></li>
+<li><a href="#project-structure">Project Structure</a></li>
+<li><a href="#code-examples">Code Examples</a></li>
+</ol>
+<hr />
+<h2 id="what-we-learned-today">What We Learned Today</h2>
+<h3 id="goals-achieved">Goals Achieved:</h3>
+<ul>
+<li>✅ Installed Playwright for Python</li>
+<li>✅ Created first test (GitHub Sign in button)</li>
+<li>✅ Created second test (GitHub Sign up button)</li>
+<li>✅ Learned test structure and syntax</li>
+<li>✅ Learned Git workflow (commit, push)</li>
+<li>✅ Set up GitHub repository</li>
+</ul>
+<hr />
+<h2 id="playwright-setup">Playwright Setup</h2>
+<h3 id="installation-commands">Installation Commands:</h3>
+<div class="sourceCode" id="cb1"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install playwright</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install pytest</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install pytest-playwright</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="ex">playwright</span> install  <span class="co"># Install browsers</span></span></code></pre></div>
+<h3 id="key-libraries">Key Libraries:</h3>
+<ul>
+<li><strong><code>playwright</code></strong> - Browser automation library</li>
+<li><strong><code>pytest</code></strong> - Test framework/runner</li>
+<li><strong><code>pytest-playwright</code></strong> - Integration plugin</li>
+</ul>
+<h3 id="understanding-pytest-vs-playwright">Understanding pytest vs Playwright:</h3>
+<ul>
+<li><strong>pytest</strong>: Test framework + runner (general purpose)</li>
+<li><strong>Playwright</strong>: Browser automation library (for web testing)</li>
+<li>They work together: pytest runs tests, Playwright controls browsers</li>
+</ul>
+<hr />
+<h2 id="test-structure">Test Structure</h2>
+<h3 id="basic-test-function">Basic Test Function:</h3>
+<div class="sourceCode" id="cb2"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> playwright.sync_api <span class="im">import</span> Page, expect</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> test_name(page: Page):</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Test code here</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">pass</span></span></code></pre></div>
+<h3 id="key-components">Key Components:</h3>
+<ol type="1">
+<li><strong>Import statement</strong>: <code>from playwright.sync_api import Page, expect</code></li>
+<li><strong>Function name</strong>: Must start with <code>test_</code></li>
+<li><strong>Parameter</strong>: <code>page: Page</code> (automatically provided by pytest-playwright)</li>
+<li><strong>Test code</strong>: Navigate, find elements, assert</li>
+</ol>
+<h3 id="understanding-parameters">Understanding Parameters:</h3>
+<ul>
+<li><strong><code>Page</code></strong> (capital P) = Type/class from Playwright</li>
+<li><strong><code>page</code></strong> (lowercase p) = Variable name (the actual browser page object)</li>
+<li>Playwright provides the <code>page</code> object automatically</li>
+</ul>
+<hr />
+<h2 id="key-concepts">Key Concepts</h2>
+<h3 id="synchronous-vs-asynchronous">Synchronous vs Asynchronous:</h3>
+<ul>
+<li><strong>Synchronous (<code>sync_api</code>)</strong>: Code runs step-by-step, waits automatically</li>
+<li><strong>No <code>await</code> keywords needed</strong></li>
+<li>Simpler for learning</li>
+<li>Example: <code>page.goto()</code> waits for page to load automatically</li>
+</ul>
+<h3 id="test-execution">Test Execution:</h3>
+<ul>
+<li><strong>Headless mode (default)</strong>: Runs in background, no visible browser</li>
+<li><strong>Headed mode</strong>: Shows browser window (<code>--headed</code> flag)</li>
+<li><strong>Timeouts</strong>: Maximum wait time (60 seconds = 60000 milliseconds)</li>
+</ul>
+<h3 id="finding-vs-asserting">Finding vs Asserting:</h3>
+<ul>
+<li><strong>Find</strong>: Locate an element on the page (<code>page.get_by_role()</code>)</li>
+<li><strong>Assert</strong>: Verify something is true (<code>expect(element).to_be_visible()</code>)</li>
+</ul>
+<hr />
+<h2 id="finding-elements">Finding Elements</h2>
+<h3 id="methods-to-find-elements">Methods to Find Elements:</h3>
+<ol type="1">
+<li><p><strong><code>page.get_by_role()</code></strong> - By role and name (most reliable)</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>page.get_by_role(<span class="st">&quot;link&quot;</span>, name<span class="op">=</span><span class="st">&quot;Sign in&quot;</span>)</span></code></pre></div></li>
+<li><p><strong><code>page.get_by_text()</code></strong> - By visible text</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>page.get_by_text(<span class="st">&quot;Sign up&quot;</span>)</span></code></pre></div></li>
+<li><p><strong><code>page.locator()</code></strong> - By CSS selector or text</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>page.locator(<span class="st">&quot;text=Sign in&quot;</span>)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>page.locator(<span class="st">&#39;a[href=&quot;/login&quot;]&#39;</span>)</span></code></pre></div></li>
+</ol>
+<h3 id="understanding-roles">Understanding Roles:</h3>
+<ul>
+<li><strong>Role</strong> = What the element is/does (link, button, heading, textbox)</li>
+<li><strong>Name</strong> = Accessible text (what screen readers see)</li>
+<li>Example: <code>get_by_role("link", name="Sign in")</code> = Find link with text “Sign in”</li>
+</ul>
+<hr />
+<h2 id="writing-tests">Writing Tests</h2>
+<h3 id="complete-test-example">Complete Test Example:</h3>
+<div class="sourceCode" id="cb6"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> playwright.sync_api <span class="im">import</span> Page, expect</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> test_github_signin(page: Page):</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Navigate to GitHub with timeout</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    page.goto(<span class="st">&quot;https://github.com&quot;</span>, timeout<span class="op">=</span><span class="dv">60000</span>)</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Find the Sign in button</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>    signin_button <span class="op">=</span> page.get_by_role(<span class="st">&quot;link&quot;</span>, name<span class="op">=</span><span class="st">&quot;Sign in&quot;</span>)</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Wait for button to appear (up to 10 seconds)</span></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>    signin_button.wait_for(state<span class="op">=</span><span class="st">&quot;visible&quot;</span>, timeout<span class="op">=</span><span class="dv">10000</span>)</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Assert it&#39;s visible</span></span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>    expect(signin_button).to_be_visible()</span></code></pre></div>
+<h3 id="key-points">Key Points:</h3>
+<ul>
+<li><strong>Navigation</strong>: <code>page.goto(url, timeout=60000)</code></li>
+<li><strong>Finding</strong>: <code>page.get_by_role("link", name="Sign in")</code></li>
+<li><strong>Waiting</strong>: <code>element.wait_for(state="visible", timeout=10000)</code></li>
+<li><strong>Asserting</strong>: <code>expect(element).to_be_visible()</code></li>
+</ul>
+<h3 id="understanding-timeouts">Understanding Timeouts:</h3>
+<ul>
+<li><strong><code>page.goto()</code> timeout (60s)</strong>: Waits for page to navigate/load</li>
+<li><strong><code>wait_for()</code> timeout (10s)</strong>: Waits for specific element to appear</li>
+<li><strong>Why both?</strong>: Page might load, but element takes time to appear</li>
+</ul>
+<hr />
+<h2 id="running-tests">Running Tests</h2>
+<h3 id="basic-commands">Basic Commands:</h3>
+<div class="sourceCode" id="cb7"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Run all tests</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="ex">pytest</span> tests/test_webtest_autoplaywright.py</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Run specific test</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="ex">pytest</span> tests/test_webtest_autoplaywright.py::test_github_signin</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Run with visible browser</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="ex">pytest</span> tests/test_webtest_autoplaywright.py <span class="at">--headed</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Run with slow motion (watch actions)</span></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a><span class="ex">pytest</span> tests/test_webtest_autoplaywright.py <span class="at">--headed</span> <span class="at">--slow-mo</span><span class="op">=</span>1000</span></code></pre></div>
+<h3 id="expected-output-success">Expected Output (Success):</h3>
+<pre><code>============================= test session starts =============================
+collected 2 items
+
+test_webtest_autoplaywright.py::test_github_signin[chromium] PASSED
+test_webtest_autoplaywright.py::test_github_signup[chromium] PASSED
+
+============================== 2 passed in XX.XXs ==============================</code></pre>
+<hr />
+<h2 id="git-commands">Git Commands</h2>
+<h3 id="basic-workflow">Basic Workflow:</h3>
+<div class="sourceCode" id="cb9"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Check status</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> status</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Add files</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> add filename.py</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Commit</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> commit <span class="at">-m</span> <span class="st">&quot;Your commit message&quot;</span></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Push to GitHub</span></span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> push</span></code></pre></div>
+<h3 id="git-concepts">Git Concepts:</h3>
+<p><strong>Local vs Remote:</strong> - <strong>Local</strong>: Repository on your computer - <strong>Remote</strong>: Repository on GitHub (somewhere else)</p>
+<p><strong>Key Terms:</strong> - <strong><code>origin</code></strong>: Nickname for your GitHub repository - <strong><code>master</code></strong>: Branch name (default branch) - <strong><code>origin/master</code></strong>: Master branch on GitHub</p>
+<p><strong>Setting up Remote:</strong></p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add remote repository</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> remote add origin https://github.com/username/repo-name.git</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Check remote connection</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> remote <span class="at">-v</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Push with tracking setup</span></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> push <span class="at">-u</span> origin master</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Future pushes (after -u)</span></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> push</span></code></pre></div>
+<p><strong>Understanding <code>-u</code> flag:</strong> - Sets up tracking between local and remote branch - After using <code>-u</code>, you can just use <code>git push</code> (no need for <code>git push origin master</code>)</p>
+<hr />
+<h2 id="project-structure">Project Structure</h2>
+<h3 id="current-structure">Current Structure:</h3>
+<pre><code>playwrighttesting/
+  ├── pages/
+  │   └── home_page.py      # Page Object Model (to be implemented)
+  ├── tests/
+  │   └── test_webtest_autoplaywright.py  # Test files
+  ├── playwright_learning_notes.md        # Learning notes
+  └── README.md                           # Project documentation</code></pre>
+<h3 id="understanding-page-object-model-pom">Understanding Page Object Model (POM):</h3>
+<ul>
+<li><strong><code>pages/</code></strong>: Contains page interaction code</li>
+<li><strong><code>tests/</code></strong>: Contains test cases</li>
+<li><strong>Separation</strong>: “What to test” (tests) vs “How to interact” (page objects)</li>
+</ul>
+<hr />
+<h2 id="code-examples">Code Examples</h2>
+<h3 id="test-1-sign-in-button-visibility">Test 1: Sign In Button Visibility</h3>
+<div class="sourceCode" id="cb12"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> playwright.sync_api <span class="im">import</span> Page, expect</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> test_github_signin(page: Page):</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Navigate to GitHub homepage with 60 second timeout</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>    page.goto(<span class="st">&quot;https://github.com&quot;</span>, timeout<span class="op">=</span><span class="dv">60000</span>)</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Find the Sign in link by its role (link) and name (Sign in)</span></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>    signin_button <span class="op">=</span> page.get_by_role(<span class="st">&quot;link&quot;</span>, name<span class="op">=</span><span class="st">&quot;Sign in&quot;</span>)</span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Wait for the button to become visible (up to 10 seconds)</span></span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>    signin_button.wait_for(state<span class="op">=</span><span class="st">&quot;visible&quot;</span>, timeout<span class="op">=</span><span class="dv">10000</span>)</span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Assert/verify that the Sign in button is visible on the page</span></span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>    expect(signin_button).to_be_visible()</span></code></pre></div>
+<h3 id="test-2-sign-up-button-visibility">Test 2: Sign Up Button Visibility</h3>
+<div class="sourceCode" id="cb13"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> test_github_signup(page: Page):</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Navigate to GitHub homepage with 60 second timeout</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>    page.goto(<span class="st">&quot;https://github.com&quot;</span>, timeout<span class="op">=</span><span class="dv">60000</span>)</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Find the Sign up link by its role (link) and name (Sign up)</span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>    signup_button <span class="op">=</span> page.get_by_role(<span class="st">&quot;link&quot;</span>, name<span class="op">=</span><span class="st">&quot;Sign up&quot;</span>)</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Wait for the button to become visible (up to 10 seconds)</span></span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>    signup_button.wait_for(state<span class="op">=</span><span class="st">&quot;visible&quot;</span>, timeout<span class="op">=</span><span class="dv">10000</span>)</span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Assert/verify that the Sign up button is visible on the page</span></span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>    expect(signup_button).to_be_visible()</span></code></pre></div>
+<hr />
+<h2 id="common-patterns">Common Patterns</h2>
+<h3 id="navigation">Navigation:</h3>
+<div class="sourceCode" id="cb14"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>page.goto(<span class="st">&quot;https://example.com&quot;</span>)</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>page.goto(<span class="st">&quot;https://example.com&quot;</span>, timeout<span class="op">=</span><span class="dv">60000</span>)</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>page.goto(<span class="st">&quot;https://example.com&quot;</span>, wait_until<span class="op">=</span><span class="st">&quot;domcontentloaded&quot;</span>)</span></code></pre></div>
+<h3 id="finding-elements-1">Finding Elements:</h3>
+<div class="sourceCode" id="cb15"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># By role (recommended)</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>element <span class="op">=</span> page.get_by_role(<span class="st">&quot;link&quot;</span>, name<span class="op">=</span><span class="st">&quot;Text&quot;</span>)</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="co"># By text</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>element <span class="op">=</span> page.get_by_text(<span class="st">&quot;Text&quot;</span>)</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a><span class="co"># By locator</span></span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>element <span class="op">=</span> page.locator(<span class="st">&quot;text=Text&quot;</span>)</span></code></pre></div>
+<h3 id="assertions">Assertions:</h3>
+<div class="sourceCode" id="cb16"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Check visibility</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>expect(element).to_be_visible()</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Check URL</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>expect(page).to_have_url(<span class="st">&quot;https://example.com/page&quot;</span>)</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Check title</span></span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>expect(page).to_have_title(<span class="st">&quot;Page Title&quot;</span>)</span></code></pre></div>
+<h3 id="waiting">Waiting:</h3>
+<div class="sourceCode" id="cb17"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Wait for element to appear</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>element.wait_for(state<span class="op">=</span><span class="st">&quot;visible&quot;</span>, timeout<span class="op">=</span><span class="dv">10000</span>)</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Wait for navigation</span></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>page.wait_for_url(<span class="st">&quot;https://example.com/page&quot;</span>)</span></code></pre></div>
+<hr />
+<h2 id="troubleshooting">Troubleshooting</h2>
+<h3 id="common-issues">Common Issues:</h3>
+<p><strong>1. Timeout Errors:</strong> - <strong>Problem</strong>: Test times out waiting for page/element - <strong>Solution</strong>: Increase timeout or use <code>wait_for()</code> on specific elements</p>
+<p><strong>2. Element Not Found:</strong> - <strong>Problem</strong>: Can’t find element on page - <strong>Solution</strong>: Check selector, use <code>--headed</code> to see what’s happening</p>
+<p><strong>3. Tests Pass Individually but Fail Together:</strong> - <strong>Problem</strong>: State from previous test affects next test - <strong>Solution</strong>: Each test should be independent (Playwright handles this automatically)</p>
+<hr />
+<h2 id="key-takeaways">Key Takeaways</h2>
+<h3 id="remember">Remember:</h3>
+<ol type="1">
+<li><strong>Import</strong>: <code>from playwright.sync_api import Page, expect</code></li>
+<li><strong>Test function</strong>: <code>def test_name(page: Page):</code></li>
+<li><strong>Navigate</strong>: <code>page.goto(url, timeout=60000)</code></li>
+<li><strong>Find</strong>: <code>page.get_by_role("link", name="Text")</code></li>
+<li><strong>Wait</strong>: <code>element.wait_for(state="visible")</code></li>
+<li><strong>Assert</strong>: <code>expect(element).to_be_visible()</code></li>
+</ol>
+<h3 id="best-practices">Best Practices:</h3>
+<ul>
+<li>Use <code>get_by_role()</code> for reliability</li>
+<li>Add timeouts for stability</li>
+<li>Use <code>wait_for()</code> before assertions</li>
+<li>Keep tests simple and focused</li>
+<li>One assertion per test (when possible)</li>
+</ul>
+<hr />
+<h2 id="next-steps">Next Steps</h2>
+<h3 id="to-continue-learning">To Continue Learning:</h3>
+<ol type="1">
+<li>Learn Page Object Model (POM) pattern</li>
+<li>Try different assertions (URL, title, text content)</li>
+<li>Practice with different websites</li>
+<li>Learn about fixtures and setup/teardown</li>
+<li>Explore more Playwright features (screenshots, videos, etc.)</li>
+</ol>
+<h3 id="repository">Repository:</h3>
+<ul>
+<li>GitHub: https://github.com/sabaribalu6691/WebTestAutomation</li>
+</ul>
+<hr />
+<h2 id="quick-reference">Quick Reference</h2>
+<h3 id="commands">Commands:</h3>
+<div class="sourceCode" id="cb18"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Install</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install playwright pytest pytest-playwright</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="ex">playwright</span> install</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Run tests</span></span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a><span class="ex">pytest</span> tests/test_file.py</span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a><span class="ex">pytest</span> tests/test_file.py <span class="at">--headed</span></span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Git</span></span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> add filename.py</span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> commit <span class="at">-m</span> <span class="st">&quot;message&quot;</span></span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> push</span></code></pre></div>
+<h3 id="import-statement">Import Statement:</h3>
+<div class="sourceCode" id="cb19"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> playwright.sync_api <span class="im">import</span> Page, expect</span></code></pre></div>
+<h3 id="test-template">Test Template:</h3>
+<div class="sourceCode" id="cb20"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> test_example(page: Page):</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>    page.goto(<span class="st">&quot;https://example.com&quot;</span>, timeout<span class="op">=</span><span class="dv">60000</span>)</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>    element <span class="op">=</span> page.get_by_role(<span class="st">&quot;link&quot;</span>, name<span class="op">=</span><span class="st">&quot;Text&quot;</span>)</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>    element.wait_for(state<span class="op">=</span><span class="st">&quot;visible&quot;</span>, timeout<span class="op">=</span><span class="dv">10000</span>)</span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>    expect(element).to_be_visible()</span></code></pre></div>
+<hr />
+<p><strong>End of Summary</strong></p>
